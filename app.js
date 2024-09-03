@@ -1,8 +1,13 @@
 const http = require('http');
 
 const express = require('express');
+const session = require('express-session');
 
 const app = express();
+
+// secret: should be way more complex in production
+// resave & saveUninitialized: session will not be saved on every single request. still uses cookie but it's hashed
+app.use(session({ secret: 'my secret as an example', resave: false, saveUninitialized: false }))
 
 // path to different middleware
 app.use('/different-path', (req, res, next) => {
@@ -12,6 +17,7 @@ app.use('/different-path', (req, res, next) => {
 
 app.use('/', (req, res, next) => {
   console.log('in another middleware');
+  req.session.isLoggedIn = true;        // for session practice
   res.send('<p>LEARNING EXPRESS</p>');
 })
 
